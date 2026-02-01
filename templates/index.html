@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Search Grid</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1c);
+        }
+
+        header img {
+            height: 80px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .hero h1 {
+            margin-bottom: 20px;
+            font-size: 36px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            flex: 1;
+            min-width: 220px;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .search-bar button {
+            padding: 14px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background: #0056b3;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #777;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="/static/food_is_m_logo.png" alt="Logo">
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Find What You’re Looking For</h1>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search items..." />
+                <button onclick="search()">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div id="results" class="grid"></div>
+    </div>
+
+    <script>
+        const data = [
+            { title: "Apple", description: "Glycemic Index of 28. Good for Diabetes" },
+            { title: "Banana", description: "A yellow tropical fruit" },
+            { title: "Orange", description: "A citrus fruit rich in vitamin C" },
+            { title: "Grapes", description: "Small round fruits used to make wine" },
+            { title: "Mango", description: "A popular tropical fruit" },
+            { title: "Pineapple", description: "A tropical fruit with a spiky exterior" },
+            { title: "Strawberry", description: "A red fruit with seeds on the outside" }
+        ];
+
+        function search() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const results = document.getElementById("results");
+            results.innerHTML = "";
+
+            const filtered = data.filter(item =>
+                item.title.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                results.innerHTML = `<div class="empty">No results found</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+            `;
+                results.appendChild(card);
+            });
+        }
+
+        // search();
+    </script>
+
+</body>
+
+</html>
