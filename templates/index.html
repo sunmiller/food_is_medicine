@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Responsive Search Grid</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 
     <style>
         body {
@@ -28,7 +29,7 @@
 
         /* Hero Section */
         .hero {
-            background-image: url('background.jpg');
+            background-image: url('/static/background.jpg');
             background-size: cover;
             background-position: center;
             padding: 80px 20px;
@@ -150,43 +151,88 @@
         <div id="results" class="grid"></div>
     </div>
 
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
-        const data = [
-            { title: "Apple", description: "Glycemic Index of 28. Good for Diabetes" },
-            { title: "Banana", description: "A yellow tropical fruit" },
-            { title: "Orange", description: "A citrus fruit rich in vitamin C" },
-            { title: "Grapes", description: "Small round fruits used to make wine" },
-            { title: "Mango", description: "A popular tropical fruit" },
-            { title: "Pineapple", description: "A tropical fruit with a spiky exterior" },
-            { title: "Strawberry", description: "A red fruit with seeds on the outside" }
-        ];
-
-        function search() {
-            const query = document.getElementById("searchInput").value.toLowerCase();
-            const results = document.getElementById("results");
-            results.innerHTML = "";
-
-            const filtered = data.filter(item =>
-                item.title.toLowerCase().includes(query)
-            );
-
-            if (filtered.length === 0) {
-                results.innerHTML = `<div class="empty">No results found</div>`;
-                return;
-            }
-
-            filtered.forEach(item => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
-            `;
-                results.appendChild(card);
+        // jQuery method to make API call
+        function searchFoodAPI(query) {
+            return $.ajax({
+                url: 'http://127.0.0.1:8080/api/search',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "query": query,
+                    "variables": {}
+                }),
+                timeout: 10000 // 10 second timeout
             });
         }
 
-        // search();
+        function search() {
+            const query = $('#searchInput').val();
+            const results = $('#results');
+
+            if (!query.trim()) {
+                results.html(`<div class="empty">Please enter a search query</div>`);
+                return;
+            }
+
+            // Show loading message
+            results.html(`<div class="empty">Searching...</div>`);
+
+            // Make API call using jQuery
+            searchFoodAPI(query)
+                .done(function (response) {
+                    console.log('API Response:', response);
+                    displayResults(response, results);
+                })
+                .fail(function (xhr, status, error) {
+                    console.error('API Error:', error);
+                    console.error('Status:', status);
+                    console.error('Response:', xhr.responseText);
+                    results.html(`<div class="empty">Error: ${error}. Please try again.</div>`);
+                });
+        }
+
+        function displayResults(response, resultsContainer) {
+            resultsContainer.empty();
+
+            if (response.message && response.message === "No results found") {
+                resultsContainer.html(`<div class="empty">No results found</div>`);
+                return;
+            }
+
+            if (!response.results || response.results.length === 0) {
+                resultsContainer.html(`<div class="empty">No results found</div>`);
+                return;
+            }
+
+            response.results.forEach(function (item) {
+                const card = $(`
+                    <div class="card">
+                        <h3>${item['Food Name'] || 'Unknown Food'}</h3>
+                        <p><strong>Calories:</strong> ${item['Calories'] || 'N/A'}</p>
+                        <p><strong>Glycemic Index:</strong> ${item['Glycemic Index'] || 'N/A'}</p>
+                        <p><strong>Protein:</strong> ${item['Protein'] || 'N/A'}g</p>
+                        <p><strong>Carbohydrates:</strong> ${item['Carbohydrates'] || 'N/A'}g</p>
+                        <p><strong>Fat:</strong> ${item['Fat'] || 'N/A'}g</p>
+                        <p><strong>Suitable for Diabetes:</strong> ${item['Suitable for Diabetes'] || 'N/A'}</p>
+                        <p><strong>Suitable for Blood Pressure:</strong> ${item['Suitable for Blood Pressure'] ? 'Yes' : 'No'}</p>
+                    </div>
+                `);
+                resultsContainer.append(card);
+            });
+        }
+
+        // Allow Enter key to trigger search
+        $(document).ready(function () {
+            $('#searchInput').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    search();
+                }
+            });
+        });
     </script>
 
 </body>

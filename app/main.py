@@ -1,7 +1,9 @@
+import os
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from app.chain import run_food_query
@@ -14,6 +16,21 @@ app = FastAPI(
     title="Food Suitability Search API",
     version="1.0.0"
 )
+ENV = os.getenv("ENV", "local")
+
+if ENV == "prod":
+    origins = ["https://app.example.com"]
+else:
+    origins = ["http://localhost:8080"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
