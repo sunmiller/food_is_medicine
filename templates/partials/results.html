@@ -1,0 +1,20 @@
+{% if not results %}
+<div class="empty">No results found</div>
+{% endif %}
+
+{% for item in results %}
+<div class="card">
+    <h3>{{ item["Food Name"] or "Unknown Food" }}</h3>
+    <p><strong>Calories:</strong> {{ item["Calories"] or "N/A" }}</p>
+    <p><strong>Glycemic Index:</strong> {{ item["Glycemic Index"] or "N/A" }}</p>
+    <p><strong>Protein:</strong> {{ item["Protein"] or "N/A" }}g</p>
+    <p><strong>Carbohydrates:</strong> {{ item["Carbohydrates"] or "N/A" }}g</p>
+    <p><strong>Fat:</strong> {{ item["Fat"] or "N/A" }}g</p>
+    <p><strong>Suitable for Diabetes:</strong>
+        {% if item["Suitable for Diabetes"] in ["1", 1, "Yes", True] %}Yes{% else %}No{% endif %}
+    </p>
+    <p><strong>Suitable for Blood Pressure:</strong>
+        {% if item["Suitable for Blood Pressure"] in ["1", 1, "Yes", True] %}Yes{% else %}No{% endif %}
+    </p>
+</div>
+{% endfor %}

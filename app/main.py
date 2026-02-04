@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -39,7 +39,10 @@ templates = Jinja2Templates(directory="templates")
 def home(request: Request):
     return templates.TemplateResponse(
         "index.html",
-        {"request": request}
+        {
+            "request": request,
+            "api_base":"/api"
+         }
     )
 
 # Add a debug endpoint to check dataframe (REMOVE IN PRODUCTION)
@@ -58,6 +61,18 @@ def check_dataframe():
 class SearchRequest(BaseModel):
     query: str
 
+@app.post("/search")
+async def search_food(request: Request, query: str = Form(...)):
+    # 🔁 Reuse your existing search logic here
+    data = run_food_query(query)
+
+    return templates.TemplateResponse(
+        "partials/results.html",
+        {
+            "request": request,
+            "results": data["results"]
+        }
+    )
 
 @app.post("/api/search")
 def search_food(req: SearchRequest):

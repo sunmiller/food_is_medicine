@@ -129,6 +129,7 @@
             }
         }
     </style>
+
 </head>
 
 <body>
@@ -141,99 +142,23 @@
         <div class="hero-content">
             <h1>Find What You’re Looking For</h1>
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Search items..." />
-                <button onclick="search()">Search</button>
+                <form hx-post="/search" hx-target="#results" hx-swap="innerHTML">
+                    <input type="text" name="query" placeholder="Search food..." />
+
+                    <button type="submit">Search</button>
+                </form>
             </div>
         </div>
     </section>
 
     <div class="container">
         <div id="results" class="grid"></div>
+        <div hx-indicator class="loading" style="display:none;">
+            Searching...
+        </div>
     </div>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        // jQuery method to make API call
-        function searchFoodAPI(query) {
-            return $.ajax({
-                url: 'http://127.0.0.1:8080/api/search',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    "query": query,
-                    "variables": {}
-                }),
-                timeout: 10000 // 10 second timeout
-            });
-        }
-
-        function search() {
-            const query = $('#searchInput').val();
-            const results = $('#results');
-
-            if (!query.trim()) {
-                results.html(`<div class="empty">Please enter a search query</div>`);
-                return;
-            }
-
-            // Show loading message
-            results.html(`<div class="empty">Searching...</div>`);
-
-            // Make API call using jQuery
-            searchFoodAPI(query)
-                .done(function (response) {
-                    console.log('API Response:', response);
-                    displayResults(response, results);
-                })
-                .fail(function (xhr, status, error) {
-                    console.error('API Error:', error);
-                    console.error('Status:', status);
-                    console.error('Response:', xhr.responseText);
-                    results.html(`<div class="empty">Error: ${error}. Please try again.</div>`);
-                });
-        }
-
-        function displayResults(response, resultsContainer) {
-            resultsContainer.empty();
-
-            if (response.message && response.message === "No results found") {
-                resultsContainer.html(`<div class="empty">No results found</div>`);
-                return;
-            }
-
-            if (!response.results || response.results.length === 0) {
-                resultsContainer.html(`<div class="empty">No results found</div>`);
-                return;
-            }
-
-            response.results.forEach(function (item) {
-                const card = $(`
-                    <div class="card">
-                        <h3>${item['Food Name'] || 'Unknown Food'}</h3>
-                        <p><strong>Calories:</strong> ${item['Calories'] || 'N/A'}</p>
-                        <p><strong>Glycemic Index:</strong> ${item['Glycemic Index'] || 'N/A'}</p>
-                        <p><strong>Protein:</strong> ${item['Protein'] || 'N/A'}g</p>
-                        <p><strong>Carbohydrates:</strong> ${item['Carbohydrates'] || 'N/A'}g</p>
-                        <p><strong>Fat:</strong> ${item['Fat'] || 'N/A'}g</p>
-                        <p><strong>Suitable for Diabetes:</strong> ${item['Suitable for Diabetes'] || 'N/A'}</p>
-                        <p><strong>Suitable for Blood Pressure:</strong> ${item['Suitable for Blood Pressure'] ? 'Yes' : 'No'}</p>
-                    </div>
-                `);
-                resultsContainer.append(card);
-            });
-        }
-
-        // Allow Enter key to trigger search
-        $(document).ready(function () {
-            $('#searchInput').on('keypress', function (e) {
-                if (e.which === 13) { // Enter key
-                    search();
-                }
-            });
-        });
-    </script>
 
 </body>
 

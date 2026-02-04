@@ -8,3 +8,4 @@ openai
 rich
 python-dotenv
 jinja2
+python-multipart
