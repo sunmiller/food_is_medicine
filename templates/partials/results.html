@@ -2,19 +2,104 @@
 <div class="empty">No results found</div>
 {% endif %}
 
-{% for item in results %}
-<div class="card">
-    <h3>{{ item["Food Name"] or "Unknown Food" }}</h3>
-    <p><strong>Calories:</strong> {{ item["Calories"] or "N/A" }}</p>
-    <p><strong>Glycemic Index:</strong> {{ item["Glycemic Index"] or "N/A" }}</p>
-    <p><strong>Protein:</strong> {{ item["Protein"] or "N/A" }}g</p>
-    <p><strong>Carbohydrates:</strong> {{ item["Carbohydrates"] or "N/A" }}g</p>
-    <p><strong>Fat:</strong> {{ item["Fat"] or "N/A" }}g</p>
-    <p><strong>Suitable for Diabetes:</strong>
-        {% if item["Suitable for Diabetes"] in ["1", 1, "Yes", True] %}Yes{% else %}No{% endif %}
-    </p>
-    <p><strong>Suitable for Blood Pressure:</strong>
-        {% if item["Suitable for Blood Pressure"] in ["1", 1, "Yes", True] %}Yes{% else %}No{% endif %}
-    </p>
+<div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 10px;">
+    {% for item in results %}
+    {% set is_unsuitable = (item["Suitable for Diabetes"] not in ["1", 1, "Yes", True]) %}
+    <div class="nutrition-label"
+        style="border: 2px solid {% if is_unsuitable %}red{% else %}black{% endif %}; width: min(280px, calc(100vw - 40px)); max-width: 320px; min-width: 260px; padding: 15px; font-family: Helvetica, Arial, sans-serif; background: {% if is_unsuitable %}#ffebee{% else %}white{% endif %}; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1
+                style="font-weight: 800; font-size: clamp(1.4rem, 4vw, 1.8rem); margin: 0; {% if is_unsuitable %}color: #d32f2f;{% endif %}">
+                Nutrition Facts</h1>
+            <span style="font-size: clamp(1.2rem, 3.5vw, 1.5rem);">
+                {% if item["Suitable for Diabetes"] in ["1", 1, "Yes", True] and item["Suitable for Blood Pressure"] in
+                ["1", 1, "Yes", True] %}👍{% else %}👎{% endif %}
+            </span>
+        </div>
+        <div style="font-size: 0.9rem; margin-bottom: 5px;">{{ item["Food Name"] or "Unknown Food" }}</div>
+        <div style="font-size: 0.8rem; margin-bottom: 10px; {% if is_unsuitable %}color: #d32f2f;{% endif %}">
+            Diabetes Suitable: {% if item["Suitable for Diabetes"] in ["1", 1, "Yes", True] %}👍 Yes{% else %}👎 No{%
+            endif %}
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; font-weight: bold; border-bottom: 8px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 2px 0; margin-bottom: 5px;">
+            <span>Serving size</span>
+            <span>100g</span>
+        </div>
+
+        <div
+            style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.3rem; padding: 8px 0; border-bottom: 4px solid {% if is_unsuitable %}red{% else %}black{% endif %};">
+            <span>Calories</span>
+            <span>{{ item["Calories"] or "N/A" }}</span>
+        </div>
+
+        <div style="text-align: right; font-size: 0.8rem; font-weight: bold; padding: 2px 0;">% Daily Value*</div>
+
+        <div style="border-top: 1px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 3px 0;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>Total Fat {{ item["Fat"] or "N/A" }}g</span>
+                <span>{% if item["Fat"] %}{{ ((item["Fat"] / 65) * 100) | round | int }}%{% else %}N/A{% endif %}</span>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 3px 0;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>Sodium {{ item["Sodium Content"] or "N/A" }}mg</span>
+                <span>{% if item["Sodium Content"] %}{{ ((item["Sodium Content"] / 2300) * 100) | round | int }}%{% else
+                    %}N/A{% endif %}</span>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 3px 0;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>Total Carbohydrate {{ item["Carbohydrates"] or "N/A" }}g</span>
+                <span>{% if item["Carbohydrates"] %}{{ ((item["Carbohydrates"] / 300) * 100) | round | int }}%{% else
+                    %}N/A{% endif %}</span>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 3px 0;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                <span>Protein {{ item["Protein"] or "N/A" }}g</span>
+                <span>{% if item["Protein"] %}{{ ((item["Protein"] / 50) * 100) | round | int }}%{% else %}N/A{% endif
+                    %}</span>
+            </div>
+        </div>
+
+        <div style="border-top: 4px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 8px 0;">
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+                <span>Potassium</span>
+                <span>{{ item["Potassium Content"] or "N/A" }}mg</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+                <span>Calcium</span>
+                <span>{{ item["Calcium Content"] or "N/A" }}mg</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+                <span>Magnesium</span>
+                <span>{{ item["Magnesium Content"] or "N/A" }}mg</span>
+            </div>
+        </div>
+
+        <div style="border-top: 4px solid {% if is_unsuitable %}red{% else %}black{% endif %}; padding: 8px 0;">
+            <div style="display: flex; justify-content: space-between; padding: 2px 0; font-weight: bold;">
+                <span>Glycemic Index</span>
+                <span>{{ item["Glycemic Index"] or "N/A" }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+                <span>Blood Pressure Suitable</span>
+                <span>{% if item["Suitable for Blood Pressure"] in ["1", 1, "Yes", True] %}👍 Yes{% else %}👎 No{% endif
+                    %}</span>
+            </div>
+        </div>
+
+        <div
+            style="border-top: 4px solid {% if is_unsuitable %}red{% else %}black{% endif %}; font-size: 0.75rem; padding-top: 8px; line-height: 1.3;">
+            * The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet.
+            2,000
+            calories a day is used for general nutrition advice.
+        </div>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}

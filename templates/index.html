@@ -42,7 +42,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .hero-content {
@@ -57,13 +57,13 @@
         }
 
         /* Search Bar */
-        .search-bar {
+        .search-bar form {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
 
-        .search-bar input {
+        .search-bar input[type="text"] {
             flex: 1;
             min-width: 220px;
             padding: 14px;
@@ -140,7 +140,7 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1>Find What You’re Looking For</h1>
+            <h1>Search for the food you would like to know more about</h1>
             <div class="search-bar">
                 <form hx-post="/search" hx-target="#results" hx-swap="innerHTML">
                     <input type="text" name="query" placeholder="Search food..." />
@@ -152,7 +152,7 @@
     </section>
 
     <div class="container">
-        <div id="results" class="grid"></div>
+        <div id="results"></div>
         <div hx-indicator class="loading" style="display:none;">
             Searching...
         </div>
