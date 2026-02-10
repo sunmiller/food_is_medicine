@@ -49,7 +49,7 @@ async def search_food_form(
         "partials/results.html",
         {
             "request": request,
-            "results": data["results"]
+            "results": data.get("results", [])
         }
     )
 

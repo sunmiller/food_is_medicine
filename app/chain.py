@@ -11,44 +11,47 @@ load_dotenv()
 
 chatgpt = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
-FILTER_PROMPT = """Given the following schema of a dataframe table,
-            your task is to figure out the best pandas query to
-            filter the dataframe based on the user query which
-            will be in natural language.
+FILTER_PROMPT = """
+You are given a pandas DataFrame named df with the following schema:
 
-            The schema is as follows:
+#   Column                       Dtype
+0   Food Name                    object
+1   Glycemic Index               int64
+2   Calories                     int64
+3   Carbohydrates                float64
+4   Protein                      float64
+5   Fat                          float64
+6   Suitable for Diabetes        int64
+7   Suitable for Blood Pressure  int64
+8   Sodium Content               int64
+9   Potassium Content            int64
+10  Magnesium Content            int64
+11  Calcium Content              int64
+12  Fiber Content                float64
 
-            #   Column                       Non-Null Count  Dtype
-            ---  ------                       --------------  -----
-            0   Food Name                    502 non-null    object
-            1   Glycemic Index               502 non-null    int64
-            2   Calories                     502 non-null    int64
-            3   Carbohydrates                502 non-null    float64
-            4   Protein                      502 non-null    float64
-            5   Fat                          502 non-null    float64
-            6   Suitable for Diabetes        502 non-null    object
-            7   Suitable for Blood Pressure  502 non-null    int64
-            8   Sodium Content               502 non-null    int64
-            9   Potassium Content            502 non-null    int64
-            10  Magnesium Content            502 non-null    int64
-            11  Calcium Content              502 non-null    int64
-            12  Fiber Content                501 non-null    float64
+Your task is to generate a valid pandas filtering query based on the user's natural language question.
 
+Rules:
+- Use ONLY the column names listed above.
+- The dataframe name is df.
+- Return ONLY a pandas query (no markdown, no explanation).
+- Do NOT invent column names.
+- When filtering by Food Name, always use:
+  df["Food Name"].str.contains("<food>", case=False, na=False)
 
-            You will try to figure out the pandas query focusing
-            only on "Food Name" if the user mentions
-            anything about these in their natural language query.
-            If you find the food name in the dataframe simply return it.
-            Do not make up column names, only use the above.
-            If not then return an empty data frame.
-            Remember the dataframe name is df.
+Decision logic:
+1. If the user mentions a specific food, filter by "Food Name".
+2. If the user mentions diabetes, filter where "Suitable for Diabetes" == 1.
+3. If the user mentions blood pressure or hypertension, filter where "Suitable for Blood Pressure" == 1.
+3. If BOTH a food and diabetes are mentioned, apply BOTH filters together.
+4. If the user mentions diabetes without a food, return all foods suitable for diabetes.
+5. If no valid filters apply, return an empty dataframe using df.iloc[0:0].
 
-            Just return only the pandas query and nothing else.
-            Do not return the results as markdown, just return the query
+User Query: {user_query}
 
-            User Query: {user_query}
-            Pandas Query:
-        """
+Pandas Query:
+"""
+
 
 prompt = ChatPromptTemplate.from_template(FILTER_PROMPT)
 
@@ -86,11 +89,12 @@ def run_food_query(user_query: str):
     print("EXECUTING:")
     print(pandas_query)
 
-    # ✅ USE THE SECURITY FUNCTION!
+    # USE THE SECURITY FUNCTION!
     result_df = safe_eval_pandas(pandas_query, df)
+    print(result_df)
 
     if result_df.empty:
-        return {"message": "No results found"}
+        return {"message": "No results found, try to rephrase your query."}
 
     return {
         "query": pandas_query,
