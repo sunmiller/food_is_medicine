@@ -29,7 +29,14 @@ def home(request: Request):
             "api_base": "/api"
         }
     )
-
+@router.get("/about", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "about.html",
+        {
+            "request": request
+        }
+    )
 
 @router.post("/search", response_class=HTMLResponse)
 async def search_food_form(
