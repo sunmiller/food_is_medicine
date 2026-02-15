@@ -39,13 +39,22 @@ Rules:
 - When filtering by Food Name, always use:
   df["Food Name"].str.contains("<food>", case=False, na=False)
 
-Decision logic:
-1. If the user mentions a specific food, filter by "Food Name".
-2. If the user mentions diabetes, filter where "Suitable for Diabetes" == 1.
-3. If the user mentions blood pressure or hypertension, filter where "Suitable for Blood Pressure" == 1.
-3. If BOTH a food and diabetes are mentioned, apply BOTH filters together.
-4. If the user mentions diabetes without a food, return all foods suitable for diabetes.
-5. If no valid filters apply, return an empty dataframe using df.iloc[0:0].
+Decision logic (follow strictly in this order):
+
+1. If a specific food is mentioned in the query:
+   - ALWAYS filter ONLY by "Food Name".
+   - DO NOT apply any suitability filters,
+     even if diabetes or blood pressure is mentioned.
+   - Return all matching food rows.
+
+2. If NO food is mentioned and diabetes is mentioned:
+   - Filter where "Suitable for Diabetes" == 1.
+
+3. If NO food is mentioned and blood pressure or hypertension is mentioned:
+   - Filter where "Suitable for Blood Pressure" == 1.
+
+4. If no valid filters apply, return df.iloc[0:0].
+
 
 User Query: {user_query}
 

@@ -9,3 +9,7 @@ rich
 python-dotenv
 jinja2
 python-multipart
+authlib
+python-jose[cryptography]
+python-multipart
+httpx
