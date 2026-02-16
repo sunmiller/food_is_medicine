@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Eat for Healing{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Search for the food you would like to know more about</h1>
+        <p class="hero-subtitle">Try asking questions like "is apple good for diabetes" or "can i eat cake if i have
+            diabetes"
+        </p>
+        <div class="search-bar">
+            <form hx-post="/search" hx-target="#results" hx-swap="innerHTML">
+                <input type="text" name="query" placeholder="Search food..." />
+
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div id="results"></div>
+    <div hx-indicator class="loading" style="display:none;">
+        Searching...
+    </div>
+</div>
+
+{% endblock %}

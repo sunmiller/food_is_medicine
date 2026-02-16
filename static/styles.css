@@ -15,6 +15,21 @@ header {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1c);
 }
 
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 14px;
+}
+
 header img {
     height: 80px;
 }

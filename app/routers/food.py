@@ -38,6 +38,16 @@ def home(request: Request):
         }
     )
 
+@router.get("/test", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse(
+        "test.html",
+        {
+            "request": request
+        }
+    )
+
+
 @router.post("/search", response_class=HTMLResponse)
 async def search_food_form(
     request: Request,

@@ -2,12 +2,20 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers.string import StrOutputParser
 from dotenv import load_dotenv
+import os
 
 from app.data import df
 from app.security import safe_eval_pandas
+import pandas as pd
+import logging
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Configure logging
+log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+logging.basicConfig(level=getattr(logging, log_level, logging.INFO))
+logger = logging.getLogger(__name__)
 
 chatgpt = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -37,7 +45,7 @@ Rules:
 - Return ONLY a pandas query (no markdown, no explanation).
 - Do NOT invent column names.
 - When filtering by Food Name, always use:
-  df["Food Name"].str.contains("<food>", case=False, na=False)
+df[df["Food Name"].str.contains("<food>", case=False, na=False)]
 
 Decision logic (follow strictly in this order):
 
@@ -90,17 +98,28 @@ def extract_pandas_query(raw: str) -> str:
 def run_food_query(user_query: str):
     raw = chain.invoke({"user_query": user_query})
 
-    print("RAW QUERY FROM LLM:")
-    print(raw)
+    logger.debug(f"RAW LLM OUTPUT: {raw}")
 
     pandas_query = extract_pandas_query(raw)
 
-    print("EXECUTING:")
-    print(pandas_query)
+    logger.info(f"Executing query: {pandas_query}")
 
     # USE THE SECURITY FUNCTION!
-    result_df = safe_eval_pandas(pandas_query, df)
-    print(result_df)
+    result = safe_eval_pandas(pandas_query, df)
+    logger.debug(f"Result type: {type(result)}")
+
+     # Normalize result type
+    if isinstance(result, pd.Series):
+        if result.dtype == bool:
+            result_df = df[result]   # Convert boolean mask to DataFrame
+        else:
+            result_df = result.to_frame()
+    elif isinstance(result, pd.DataFrame):
+        result_df = result
+    else:
+        result_df = pd.DataFrame()
+
+    logger.debug(f"Result type: {type(result)}")
 
     if result_df.empty:
         return {"message": "No results found, try to rephrase your query."}

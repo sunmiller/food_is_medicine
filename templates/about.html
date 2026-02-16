@@ -4,32 +4,45 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>About - Food Search API</title>
+
+    <!-- SEO Meta Tags -->
+    <title>About Suriyaa Sabaribala - Creator of Eat for Healing Platform</title>
+    <meta name="description"
+        content="Learn about Suriyaa Sabaribala, a high school student from Troy, Michigan who created the Eat for Healing platform to help people with diabetes and hypertension make better food choices based on personal family experience.">
+    <meta name="keywords"
+        content="Suriyaa Sabaribala, Athens High School, Troy Michigan, student developer, diabetes awareness, food research, glycemic index research, health platform creator, young innovator, diabetes family experience">
+    <meta name="author" content="Suriyaa Sabaribala">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://eatforhealing.com/about">
+
+    <!-- Open Graph Meta Tags (for Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="About Suriyaa Sabaribala - Creator of Eat for Healing Platform">
+    <meta property="og:description"
+        content="Meet Suriyaa Sabaribala, the high school student who created Eat for Healing to help families manage diabetes and hypertension through better food choices.">
+    <meta property="og:image" content="/static/suriyaa.jpeg">
+    <meta property="og:url" content="/about">
+    <meta property="og:site_name" content="Eat for Healing">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Suriyaa Sabaribala - Creator of Eat for Healing Platform">
+    <meta name="twitter:description"
+        content="Meet Suriyaa Sabaribala, the high school student who created Eat for Healing to help families manage diabetes and hypertension through better food choices.">
+    <meta name="twitter:image" content="/static/suriyaa.jpeg">
+
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="application-name" content="Eat for Healing">
+
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 
 <body>
 
-    <header>
-        <img src="/static/eatforhealing_logo.png" alt="Logo">
-
-
-        <nav id="nav-menu">
-            <a href="/" class="active">Home</a>
-            <a href="/about">About</a>
-            <a href="/food">Food suitable for Diabetes</a>
-            <a href="/conditions">Diabetes Condition</a>
-            <a href="/login">Log in/Register</a>
-        </nav>
-
-        <div class="menu-toggle" id="menu-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </header>
-
+    {% include "header.html" %}
     <section class="hero">
         <div class="hero-content">
             <h1>About Our Food Search Platform</h1>
