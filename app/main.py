@@ -4,10 +4,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from app.routers.food import router as food_router
-
-# Load env vars
+# Load env vars FIRST, before importing modules that need them
 load_dotenv()
+
+# NOW import modules that depend on environment variables
+# from app.services.query_service import query_service
+from app.routers.food import router as food_router
 
 ENV = os.getenv("ENV", "local")
 
@@ -16,10 +18,16 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# ---------- dbtest ----------
+# Test saving a query
+# user_id = query_service.get_or_create_anonymous_user()
+# print(f"Created test user with ID: {user_id}")
+        
+        
 # ---------- CORS ----------
 
 if ENV == "prod":
-    origins = ["https://app.example.com"]
+    origins = ["https://eatforhealing.com","https://www.eatforhealing.com"]
 else:
     origins = ["http://localhost:8080"]
 

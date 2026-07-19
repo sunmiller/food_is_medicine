@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from app.chain import run_food_query
 from app.data import df
+from app.services.query_service import QueryPersistenceService
 
 router = APIRouter()
 
@@ -23,27 +24,48 @@ class SearchRequest(BaseModel):
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
+        request=request,
+        name="index.html",
+        context={
             "api_base": "/api"
         }
     )
 @router.get("/about", response_class=HTMLResponse)
-def home(request: Request):
+def about(request: Request):
     return templates.TemplateResponse(
-        "about.html",
-        {
-            "request": request
-        }
+        request=request,
+        name="about.html",
+        context={}
+    )
+
+@router.get("/foodfordiabetes", response_class=HTMLResponse)
+def food_for_diabetes(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="foodfordiabetes.html",
+        context={}
+    )
+
+@router.get("/diabetescondition", response_class=HTMLResponse)
+def diabetes_condition(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="diabetescondition.html",
+        context={}
     )
 
 @router.get("/test", response_class=HTMLResponse)
-def home(request: Request):
+def test_page(request: Request):
+    # Lazy load the query service to avoid env var loading issues
+    query_service = QueryPersistenceService()
+
+    user_id = query_service.get_or_create_anonymous_user()
+
     return templates.TemplateResponse(
-        "test.html",
-        {
-            "request": request
+        request=request,
+        name="test.html",
+        context={
+            "user_id": user_id
         }
     )
 
@@ -56,13 +78,12 @@ async def search_food_form(
     data = run_food_query(query)
 
     return templates.TemplateResponse(
-        "partials/results.html",
-        {
-            "request": request,
+        request=request,
+        name="partials/results.html",
+        context={
             "results": data.get("results", [])
         }
     )
-
 
 # ---------- API ROUTES ----------
 

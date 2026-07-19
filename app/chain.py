@@ -111,7 +111,8 @@ def run_food_query(user_query: str):
      # Normalize result type
     if isinstance(result, pd.Series):
         if result.dtype == bool:
-            result_df = df[result]   # Convert boolean mask to DataFrame
+            result_df = result.to_frame().T
+            
         else:
             result_df = result.to_frame()
     elif isinstance(result, pd.DataFrame):
