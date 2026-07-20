@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 from app.chain import run_food_query
 from app.data import df
-from app.services.query_service import QueryPersistenceService
 
 router = APIRouter()
 
@@ -54,12 +53,33 @@ def diabetes_condition(request: Request):
         context={}
     )
 
+
+@router.get("/blog", response_class=HTMLResponse)
+def diabetes_condition(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="blog.html",
+        context={}
+    )
+@router.get("/events", response_class=HTMLResponse)
+def diabetes_condition(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="events.html",
+        context={}
+    )
+@router.get("/contact", response_class=HTMLResponse)
+def contact(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="contact.html",
+        context={}
+    )
+
 @router.get("/test", response_class=HTMLResponse)
 def test_page(request: Request):
-    # Lazy load the query service to avoid env var loading issues
-    query_service = QueryPersistenceService()
-
-    user_id = query_service.get_or_create_anonymous_user()
+    # Database calls are disabled until deployment is ready.
+    user_id = None
 
     return templates.TemplateResponse(
         request=request,

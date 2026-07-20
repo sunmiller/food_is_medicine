@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>Blog - Eat for Healing</title>
+    <meta name="description"
+        content="Explore nutrition, diabetes wellness, and nature-based health insights from Eat for Healing blog posts.">
+    <meta name="keywords" content="health blog, diabetes blog, nutrition articles, food as medicine, wellness writing">
+    <meta name="author" content="Eat for Healing">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://eatforhealing.com/blog">
+
+    <!-- Open Graph Meta Tags (for Facebook, LinkedIn, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blog - Eat for Healing">
+    <meta property="og:description" content="Read blog posts on food, health, and practical wellness insights.">
+    <meta property="og:image" content="/static/eatforhealing_logo.png">
+    <meta property="og:url" content="/blog">
+    <meta property="og:site_name" content="Eat for Healing">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blog - Eat for Healing">
+    <meta name="twitter:description" content="Discover posts about nutrition, diabetes, and nature-based wellness.">
+    <meta name="twitter:image" content="/static/eatforhealing_logo.png">
+
+    <!-- Additional SEO Tags -->
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="application-name" content="Eat for Healing">
+
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+    {% include "header.html" %}
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Eat for Healing Blog</h1>
+            <p class="hero-subtitle">Stories, research notes, and practical guidance for healthier living through food
+                and nature.</p>
+        </div>
+    </section>
+
+    <main class="blog-shell">
+        <div class="blog-layout">
+            <section class="blog-main" aria-label="Blog posts">
+                <article class="blog-featured">
+                    <p class="blog-meta">Featured Post • Jul 19, 2026</p>
+                    <h2>Protecting Health through Nature</h2>
+                    <p>
+                        How soil quality, biodiversity, and food choices connect to blood sugar, inflammation, and
+                        overall community well-being.
+                    </p>
+                    <a href="#" class="blog-link">Read featured post</a>
+                </article>
+
+                <div class="blog-post-grid">
+                    <article class="blog-post-card">
+                        <p class="blog-meta">Nutrition • Jul 14, 2026</p>
+                        <h3>5 Simple Breakfasts for Steady Energy</h3>
+                        <p>Balanced morning meals with fiber, protein, and healthy fats to support stable blood sugar.
+                        </p>
+                        <a href="#" class="blog-link">Read more</a>
+                    </article>
+
+                    <article class="blog-post-card">
+                        <p class="blog-meta">Diabetes • Jul 10, 2026</p>
+                        <h3>Understanding the Glycemic Index Without Stress</h3>
+                        <p>A practical way to use GI in real life without overcomplicating your meals.</p>
+                        <a href="#" class="blog-link">Read more</a>
+                    </article>
+
+                    <article class="blog-post-card">
+                        <p class="blog-meta">Community • Jul 06, 2026</p>
+                        <h3>From Garden to Plate: A Local Health Story</h3>
+                        <p>How community gardens can improve access to nutrient-dense foods and encourage healthy
+                            habits.</p>
+                        <a href="#" class="blog-link">Read more</a>
+                    </article>
+
+                    <article class="blog-post-card">
+                        <p class="blog-meta">Wellness • Jul 02, 2026</p>
+                        <h3>Small Daily Habits That Protect Metabolic Health</h3>
+                        <p>Simple routines around movement, hydration, and meal timing that add up over time.</p>
+                        <a href="#" class="blog-link">Read more</a>
+                    </article>
+                </div>
+            </section>
+
+            <aside class="blog-sidebar" aria-label="Blog sidebar">
+                <section class="blog-sidebar-card">
+                    <h3>About This Blog</h3>
+                    <p>
+                        This space shares educational posts on food, diabetes awareness, and nature-informed health
+                        practices.
+                    </p>
+                </section>
+
+                <section class="blog-sidebar-card">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li>Nutrition Basics</li>
+                        <li>Diabetes Care</li>
+                        <li>Healthy Recipes</li>
+                        <li>Community Health</li>
+                    </ul>
+                </section>
+
+                <section class="blog-sidebar-card">
+                    <h3>Recent Topics</h3>
+                    <ul>
+                        <li>Meal planning with whole grains</li>
+                        <li>Fiber and blood sugar control</li>
+                        <li>Low-cost healthy food swaps</li>
+                    </ul>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    {% include "footer.html" %}
+
+</body>
+
+</html>
