@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -19,6 +20,15 @@ class SearchRequest(BaseModel):
 
 
 # ---------- HTML ROUTES ----------
+
+@router.get("/sitemap.xml", response_class=FileResponse)
+def sitemap():
+    return FileResponse("sitemap.xml", media_type="application/xml")
+
+
+@router.get("/robots.txt", response_class=FileResponse)
+def robots():
+    return FileResponse("robots.txt", media_type="text/plain")
 
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
