@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
@@ -9,6 +9,10 @@ from app.chain import run_food_query
 from app.data import df
 
 router = APIRouter()
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SITEMAP_PATH = PROJECT_ROOT / "sitemap.xml"
+ROBOTS_PATH = PROJECT_ROOT / "robots.txt"
 
 templates = Jinja2Templates(directory="templates")
 
@@ -23,12 +27,12 @@ class SearchRequest(BaseModel):
 
 @router.get("/sitemap.xml", response_class=FileResponse)
 def sitemap():
-    return FileResponse("sitemap.xml", media_type="application/xml")
+    return FileResponse(str(SITEMAP_PATH), media_type="application/xml")
 
 
 @router.get("/robots.txt", response_class=FileResponse)
 def robots():
-    return FileResponse("robots.txt", media_type="text/plain")
+    return FileResponse(str(ROBOTS_PATH), media_type="text/plain")
 
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):

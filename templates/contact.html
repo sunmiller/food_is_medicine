@@ -39,6 +39,8 @@
 
 </head>
 
+{% include "gtag.html" %}
+
 <body>
     {% include "header.html" %}
 
@@ -76,12 +78,8 @@
             <h2 id="email-form-title">Contact Form</h2>
             <p>Share your details and message, and I will get back to you.</p>
 
-            <form
-                class="contact-form"
-                action="#"
-                method="post"
-                onsubmit="event.preventDefault(); this.reset(); window.location.hash='contact-card';"
-            >
+            <form class="contact-form" action="#" method="post"
+                onsubmit="event.preventDefault(); this.reset(); window.location.hash='contact-card';">
                 <label for="contact-name">Your Name</label>
                 <input id="contact-name" name="name" type="text" placeholder="Enter your name" required>
 

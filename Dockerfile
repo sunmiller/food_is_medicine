@@ -14,6 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
 COPY templates ./templates
 COPY static ./static
+COPY robots.txt ./robots.txt
+COPY sitemap.xml ./sitemap.xml
 
 EXPOSE 8000
 
