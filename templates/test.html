@@ -1,30 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Eat for Healing{% endblock %}
+{% block title %}Session Test | Eat for Healing{% endblock %}
 
 {% block content %}
+<section class="container">
+    <div class="content">
+        <h2>Google Login Session Test</h2>
+        <p>Use this page to verify your OAuth session values after signing in with Google.</p>
 
-<section class="hero">
-    <div class="hero-content">
-        <h1>Search for the food you would like to know more about</h1>
-        <p class="hero-subtitle">Try asking questions like "is apple good for diabetes" or "can i eat cake if i have
-            diabetes"
+        <h3>Login Status</h3>
+        {% if user_email %}
+        <p><strong>Signed in email:</strong> {{ user_email }}</p>
+        {% else %}
+        <p><strong>Signed in email:</strong> Not logged in</p>
+        <p>
+            <a href="/login">Go to Login</a>
         </p>
-        <div class="search-bar">
-            <form hx-post="/search" hx-target="#results" hx-swap="innerHTML">
-                <input type="text" name="query" placeholder="Search food..." />
+        {% endif %}
 
-                <button type="submit">Search</button>
-            </form>
-        </div>
+        <h3>User Session Object</h3>
+        {% if user_session %}
+        <pre>{{ user_session | tojson(indent=2) }}</pre>
+        {% else %}
+        <p>No user object found in session.</p>
+        {% endif %}
+
+        <h3>Full Session Data</h3>
+        {% if session_data %}
+        <pre>{{ session_data | tojson(indent=2) }}</pre>
+        {% else %}
+        <p>Session is empty.</p>
+        {% endif %}
     </div>
 </section>
-
-<div class="container">
-    <div id="results"></div>
-    <div hx-indicator class="loading" style="display:none;">
-        Searching...
-    </div>
-</div>
-
 {% endblock %}

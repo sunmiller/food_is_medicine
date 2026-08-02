@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Eat for Healing{% endblock %}
+
+{% block content %}
+<section class="login-shell" aria-label="Login page">
+    <div class="login-card">
+        <h1>Welcome back</h1>
+        <p class="login-subtitle">Sign in to save preferences and continue your food search journey.</p>
+
+        {% if google_error == "google_not_configured" %}
+        <p class="login-error">Google login is not configured yet. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET.</p>
+        {% elif google_error == "google_auth_failed" %}
+        <p class="login-error">Google sign-in failed. Please try again.</p>
+        {% endif %}
+
+        <form class="login-form" method="post" action="#">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Enter your password"
+                autocomplete="current-password" required>
+
+            <button type="submit">Log in</button>
+        </form>
+
+        <div class="login-divider">
+            <hr>
+            <span>or</span>
+        </div>
+
+        <a class="google-login-button {% if not google_auth_enabled %}is-disabled{% endif %}"
+            href="{% if google_auth_enabled %}{{ google_login_url }}{% else %}#{% endif %}"
+            aria-label="Continue with Google">
+            Continue with Google
+        </a>
+
+        <p class="login-footer-text">
+            New here?
+            <a href="#">Create an account</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

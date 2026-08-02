@@ -1,5 +1,5 @@
 <header>
-    <img src="/static/eatforhealing_logo.png" alt="Logo">
+    <img class="site-logo" src="/static/eatforhealing_logo.png" alt="Logo">
 
     <nav id="nav-menu">
         <a href="/" class="active">Home</a>
@@ -9,7 +9,21 @@
         <a href="/blog">Blog</a>
         <a href="/events">Events</a>
         <a href="/contact">Contact</a>
+        {% if user_session %}
+        <div class="nav-user">
+            {% if user_session.picture %}
+            <img class="nav-user-avatar" src="{{ user_session.picture }}"
+                alt="{{ user_session.name or user_session.email }}">
+            {% endif %}
+            <div class="nav-user-copy">
+                <span class="nav-user-label">Signed in as</span>
+                <span class="nav-user-name">{{ user_session.name or user_session.email }}</span>
+            </div>
+            <a class="nav-logout" href="/logout">Log out</a>
+        </div>
+        {% else %}
         <a href="/login">Log in/Register</a>
+        {% endif %}
     </nav>
 
     <div class="menu-toggle" id="menu-toggle">

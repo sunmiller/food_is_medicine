@@ -48,6 +48,9 @@
 
     <section class="hero">
         <div class="hero-content">
+            {% if user_session and user_session.name %}
+            <p class="hero-welcome">Welcome {{ user_session.name }}</p>
+            {% endif %}
             <h1>Search for the food you would like to know more about</h1>
             <p class="hero-subtitle">Try asking questions like "is apple good for diabetes" or "can i eat cake if i have
                 diabetes"

@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 
 # Load env vars FIRST, before importing modules that need them
@@ -16,6 +17,13 @@ ENV = os.getenv("ENV", "local")
 app = FastAPI(
     title="Food Suitability Search API",
     version="1.0.0"
+)
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET_KEY", "dev-insecure-session-key"),
+    https_only=ENV == "prod",
+    same_site="lax"
 )
 
 # ---------- dbtest ----------

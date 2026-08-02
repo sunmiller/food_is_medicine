@@ -1,8 +1,11 @@
 from pathlib import Path
+import os
 from fastapi import APIRouter, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from authlib.integrations.starlette_client import OAuth, OAuthError
 from pydantic import BaseModel
 
 from app.chain import run_food_query
@@ -15,6 +18,33 @@ SITEMAP_PATH = PROJECT_ROOT / "sitemap.xml"
 ROBOTS_PATH = PROJECT_ROOT / "robots.txt"
 
 templates = Jinja2Templates(directory="templates")
+
+oauth = OAuth()
+google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+
+if google_client_id and google_client_secret:
+    oauth.register(
+        name="google",
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_id=google_client_id,
+        client_secret=google_client_secret,
+        client_kwargs={"scope": "openid email profile"},
+    )
+
+
+def render_page(request: Request, name: str, context: dict | None = None):
+    merged_context = {
+        "user_session": request.session.get("user") if request.session else None,
+    }
+    if context:
+        merged_context.update(context)
+
+    return templates.TemplateResponse(
+        request=request,
+        name=name,
+        context=merged_context,
+    )
 
 
 # ---------- MODELS ----------
@@ -36,16 +66,16 @@ def robots():
 
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="index.html",
         context={
-            "api_base": "/api"
+            "api_base": "/api",
         }
     )
 @router.get("/about", response_class=HTMLResponse)
 def about(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="about.html",
         context={}
@@ -53,7 +83,7 @@ def about(request: Request):
 
 @router.get("/foodfordiabetes", response_class=HTMLResponse)
 def food_for_diabetes(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="foodfordiabetes.html",
         context={}
@@ -61,7 +91,7 @@ def food_for_diabetes(request: Request):
 
 @router.get("/diabetescondition", response_class=HTMLResponse)
 def diabetes_condition(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="diabetescondition.html",
         context={}
@@ -70,36 +100,90 @@ def diabetes_condition(request: Request):
 
 @router.get("/blog", response_class=HTMLResponse)
 def diabetes_condition(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="blog.html",
         context={}
     )
 @router.get("/events", response_class=HTMLResponse)
 def diabetes_condition(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="events.html",
         context={}
     )
 @router.get("/contact", response_class=HTMLResponse)
 def contact(request: Request):
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="contact.html",
         context={}
     )
 
+@router.get("/login", response_class=HTMLResponse)
+def login(request: Request):
+    return render_page(
+        request=request,
+        name="login.html",
+        context={
+            "google_login_url": str(request.url_for("auth_google_login")),
+            "google_auth_enabled": bool(google_client_id and google_client_secret),
+            "google_error": request.query_params.get("error")
+        }
+    )
+
+@router.get("/auth/google/login")
+async def auth_google_login(request: Request):
+    if not (google_client_id and google_client_secret):
+        return RedirectResponse(url="/login?error=google_not_configured", status_code=302)
+
+    redirect_uri = request.url_for("auth_google_callback")
+    return await oauth.google.authorize_redirect(request, redirect_uri)
+
+@router.get("/auth/google/callback")
+async def auth_google_callback(request: Request):
+    if not (google_client_id and google_client_secret):
+        return RedirectResponse(url="/login?error=google_not_configured", status_code=302)
+
+    try:
+        token = await oauth.google.authorize_access_token(request)
+        user_info = token.get("userinfo")
+
+        if not user_info:
+            user_info = await oauth.google.parse_id_token(request, token)
+
+        if not user_info:
+            return RedirectResponse(url="/login?error=google_auth_failed", status_code=302)
+
+        request.session["user"] = {
+            "sub": user_info.get("sub"),
+            "email": user_info.get("email"),
+            "name": user_info.get("name"),
+            "picture": user_info.get("picture"),
+        }
+        return RedirectResponse(url="/", status_code=302)
+    except OAuthError:
+        return RedirectResponse(url="/login?error=google_auth_failed", status_code=302)
+
+
+@router.get("/logout")
+def logout(request: Request):
+    if request.session:
+        request.session.pop("user", None)
+    return RedirectResponse(url="/", status_code=302)
+
 @router.get("/test", response_class=HTMLResponse)
 def test_page(request: Request):
-    # Database calls are disabled until deployment is ready.
-    user_id = None
+    user_session = request.session.get("user") if request.session else None
+    user_email = user_session.get("email") if user_session else None
 
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="test.html",
         context={
-            "user_id": user_id
+            "user_email": user_email,
+            "user_session": user_session,
+            "session_data": dict(request.session)
         }
     )
 
@@ -111,7 +195,7 @@ async def search_food_form(
 ):
     data = run_food_query(query)
 
-    return templates.TemplateResponse(
+    return render_page(
         request=request,
         name="partials/results.html",
         context={
