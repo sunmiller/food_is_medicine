@@ -51,136 +51,132 @@
             {% if user_session and user_session.name %}
             <p class="hero-welcome">Welcome {{ user_session.name }}</p>
             {% endif %}
-            <h1>Search for the food you would like to know more about</h1>
-            <p class="hero-subtitle">Try asking questions like "is apple good for diabetes" or "can i eat cake if i have
-                diabetes"
-            </p>
-            <div class="search-bar">
-                <form hx-post="/search" hx-target="#results" hx-swap="innerHTML">
-                    <input type="text" name="query" placeholder="Search food..." />
+            <div class="hero-brand">🌱 EAT FOR HEALING</div>
+            <h1>Find foods that help support healthy blood sugar.</h1>
+            <p class="hero-subtitle">Search our diabetes-friendly food database and get science-based nutrition
+                guidance to make informed food choices.</p>
 
+            <ul class="hero-features" aria-label="Benefits of Eat for Healing">
+                <li>✅ Search 5,000+ Foods</li>
+                <li>✅ Diabetes-Friendly Guidance</li>
+                <li>✅ Science-Based Nutrition</li>
+            </ul>
+
+            <div class="hero-actions">
+                <a class="hero-button hero-button-secondary" href="#diabetes-journey-section">Learn More</a>
+            </div>
+            <div class="search-bar">
+                <form id="food-search-form">
+                    <input id="food-search" type="text" name="query" placeholder="Search food..." />
                     <button type="submit">Search</button>
                 </form>
+                <div class="search-suggestions" aria-label="Suggested searches">
+                    <button type="button" class="suggestion-pill" data-query="Is apple good for diabetes">Is apple good
+                        for diabetes</button>
+                    <button type="button" class="suggestion-pill" data-query="Can I eat banana if I am diabetic">Can I
+                        eat banana if I am diabetic</button>
+                    <button type="button" class="suggestion-pill"
+                        data-query="Can I eat chips if I have hypertension">Can I eat chips if I have
+                        hypertension</button>
+                </div>
             </div>
         </div>
     </section>
     <div class="container">
         <div id="results"></div>
-        <div hx-indicator class="loading" style="display:none;">
+        <div class="loading" style="display:none;">
             Searching...
         </div>
     </div>
-    <section class="nature-section" aria-label="Protecting health through nature">
-        <div class="nature-content">
-            <h2>Protecting Health through Nature</h2>
-            <p>
-                I am Suriyaa, I study how soil, plants, insects, microbes, water, and air can affect human health.
-                My goal is to help my community understand that a healthy environment can lead to healthier people.
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('food-search-form');
+            const input = document.getElementById('food-search');
+            const results = document.getElementById('results');
+            const loading = document.querySelector('.loading');
 
-                Food can be daily medicine. Explore natural, diabetes-friendly choices and build a plate that supports
-                stable blood sugar, energy, and long-term wellness.
-            </p>
-        </div>
-    </section>
+            if (!form || !results || !input) return;
 
-    <section class="three-columns" aria-label="Three information columns">
-        <div class="three-columns-grid">
-            <article class="three-column-card">
-                <h3><a href="#study-nature-section">Study Nature</a></h3>
-                <p>
-                    I learn from soil, insects, plants, microbes, water, and air. <a href="#study-nature-section"
-                        aria-label="Read more about Study Nature">...</a>
-                </p>
-            </article>
-            <article class="three-column-card">
-                <h3>
-                    <a href="#restore-habitats-section" aria-label="Study Nature story">Restore Habitats</a>
-                </h3>
-                <p>
-                    I support native plants, pollinators, and clean green spaces. <a href="#restore-habitats-section"
-                        aria-label="Study Nature story">...</a>
-                </p>
-            </article>
-            <article class="three-column-card">
-                <h3><a href="#diabetes-journey-section">Food impact on diabetes</a></h3>
-                <p>
-                    I help people understand how food impacts diabetes. <a href="#diabetes-journey-section"
-                        aria-label="Read more about My Journey Studying Diabetes">...</a>
-                </p>
-            </article>
-        </div>
-    </section>
+            const submitQuery = async function (query) {
+                const trimmed = (query || '').trim();
+                if (!trimmed) return;
 
-    <section id="study-nature-section" class="study-nature-section" aria-label="Study Nature story">
-        <div class="study-nature-content">
-            <h2>Study Nature</h2>
-            <p>
-                I enjoy studying nature because it helps me understand how living things and the environment are
-                connected. I have cared for pet snakes, maintained a terrarium, and even raised ladybugs, which
-                taught me about animal behavior and ecosystems. I also presented a science exhibition project called
-                <strong>"Cows Pollute,"</strong> where I explained how cows produce methane gas, a greenhouse gas that
-                contributes to climate change. My project showed that adding seaweed to a cow's diet can help reduce
-                methane emissions. I enjoy learning from soil, insects, plants, microbes, water, and air because they
-                all play an important role in keeping our planet healthy. These experiences have inspired me to keep
-                exploring nature and learning more about environmental science.
-            </p>
-        </div>
-    </section>
+                input.value = trimmed;
 
-    <section id="restore-habitats-section" class="study-nature-section" aria-label="Restore Habitats story">
-        <div class="study-nature-content">
-            <h2>Restore Habitats</h2>
-            <p>
-                I believe that healthy habitats are essential for protecting wildlife and maintaining a healthy
-                environment. I have volunteered at many park cleanups, where I helped remove litter and restore
-                natural areas for people and animals to enjoy. I have also studied water quality in streams to better
-                understand how pollution affects aquatic ecosystems and the plants and animals that depend on clean
-                water. In addition, I have learned about organic soil and how healthy soil supports plant growth,
-                insects, and other living organisms. I support native plants, pollinators, and clean green spaces
-                because they help create balanced ecosystems and protect biodiversity. Through these experiences, I
-                have learned that even small actions can make a meaningful difference in restoring and preserving
-                natural habitats.
-            </p>
-        </div>
-    </section>
+                if (loading) {
+                    loading.style.display = 'block';
+                }
 
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+                    body: new URLSearchParams({ query: trimmed }).toString()
+                });
+
+                const html = await response.text();
+                results.innerHTML = html;
+
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+            };
+
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                await submitQuery(input.value);
+            });
+
+            document.querySelectorAll('.suggestion-pill').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    submitQuery(button.dataset.query || button.textContent);
+                });
+            });
+        });
+    </script>
     <section id="diabetes-journey-section" class="study-nature-section" aria-label="My Journey Studying Diabetes">
         <div class="study-nature-content">
             <h2>My Journey Studying Diabetes</h2>
             <p>
-                My interest in diabetes began with a simple question: <strong>Can food help people live healthier
-                    lives?</strong> That question led me to spend hundreds of hours studying how different foods affect
-                blood sugar and overall metabolic health.
+                <strong>Can eating a healthy diet help control diabetes?</strong> This question led me down the path
+                of studying diabetes. I started learning about blood sugar, glycemic index, glycemic load,
+                carbohydrate content in food, fiber, fat content, and how these affect blood sugar.
             </p>
 
             <p>
-                I have researched topics such as the glycemic index, glycemic load, carbohydrates, fiber, healthy
-                fats, protein, and the role each plays in managing diabetes. I regularly read scientific studies,
-                review nutrition databases, and compare evidence from trusted medical organizations to better
-                understand how food influences the body.
+                I have read many articles from <strong>diabetes.org</strong> and <strong>cdc.gov</strong> to better
+                understand diabetes and the impact of food on it. I also researched various foods and collated the
+                nutrient values of each food from <a href="https://fdc.nal.usda.gov/" target="_blank"
+                    rel="noopener noreferrer">USDA FoodData Central</a>.
             </p>
 
             <p>
-                I created <strong>Eat for Healing</strong> to organize that knowledge into a simple tool that anyone
-                can use. My goal is to help people discover foods that support healthier blood sugar levels and make
-                informed nutrition decisions based on science-not myths or fad diets.
+                I created <strong>eatforhealing.com</strong> to allow users to easily look up the nutrient values of
+                various foods. I also created visual indicators that make it easier to understand whether a food may
+                be suitable for diabetes and hypertension.
             </p>
 
             <p>
-                This website is more than a food search engine. It represents my ongoing commitment to learning about
-                diabetes, nutrition, and preventive health. As I continue my research, I will keep improving the
-                information and tools available here so others can benefit from what I learn.
+                Eatforhealing.com is not just a website about food. It is a project that allows me to combine my
+                interests in life sciences, food, medicine, and research. My goal is to expand the website and its
+                features so that it satisfies the needs of users looking for information about their favorite foods.
             </p>
 
             <p>
-                <strong>Knowledge is powerful. The right food choices can make a meaningful difference, and every
-                    healthy meal is a step toward better health.</strong>
+                I hope to make a real difference for people who are struggling to separate facts from fiction and
+                misleading labels. Healthy foods are often promoted as the latest fad, but the real facts can be hard
+                for the average person to understand. I hope to empower users with clear information and make it easy
+                to access. Please help by <a href="/contact">sharing feedback</a> and suggesting foods that may be
+                missing from the website.
             </p>
         </div>
     </section>
 
 
-    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"
+        integrity="sha384-QZLa3xvxcwlZFLWcAWK4+ZLh6+ri5TIO+wrNrW3xJJkMy6n9Tcs52mW7g6ER59b"
+        crossorigin="anonymous"></script>
     <script src="/static/main.js"></script>
 
 

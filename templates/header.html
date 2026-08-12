@@ -26,9 +26,11 @@
         {% endif %}
     </nav>
 
-    <div class="menu-toggle" id="menu-toggle">
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Toggle navigation menu"
+        aria-controls="nav-menu" aria-expanded="false"
+        onclick="event.stopImmediatePropagation(); const nav = document.getElementById('nav-menu'); const isActive = nav.classList.toggle('active'); this.setAttribute('aria-expanded', String(isActive));">
         <span></span>
         <span></span>
         <span></span>
-    </div>
+    </button>
 </header>

@@ -22,6 +22,7 @@ templates = Jinja2Templates(directory="templates")
 oauth = OAuth()
 google_client_id = os.getenv("GOOGLE_CLIENT_ID")
 google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+public_base_url = os.getenv("PUBLIC_BASE_URL", "").rstrip("/")
 
 if google_client_id and google_client_secret:
     oauth.register(
@@ -45,6 +46,13 @@ def render_page(request: Request, name: str, context: dict | None = None):
         name=name,
         context=merged_context,
     )
+
+
+def get_google_callback_url(request: Request) -> str:
+    if public_base_url:
+        return f"{public_base_url}{request.app.url_path_for('auth_google_callback')}"
+
+    return str(request.url_for("auth_google_callback"))
 
 
 # ---------- MODELS ----------
@@ -126,7 +134,7 @@ def login(request: Request):
         request=request,
         name="login.html",
         context={
-            "google_login_url": str(request.url_for("auth_google_login")),
+            "google_login_url": request.app.url_path_for("auth_google_login"),
             "google_auth_enabled": bool(google_client_id and google_client_secret),
             "google_error": request.query_params.get("error")
         }
@@ -137,7 +145,7 @@ async def auth_google_login(request: Request):
     if not (google_client_id and google_client_secret):
         return RedirectResponse(url="/login?error=google_not_configured", status_code=302)
 
-    redirect_uri = request.url_for("auth_google_callback")
+    redirect_uri = get_google_callback_url(request)
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @router.get("/auth/google/callback")
