@@ -14,6 +14,7 @@ from app.routers.food import router as food_router
 
 ENV = os.getenv("ENV", "local")
 
+
 app = FastAPI(
     title="Food Suitability Search API",
     version="1.0.0"

@@ -1,14 +1,17 @@
 <header>
-    <img class="site-logo" src="/static/eatforhealing_logo.png" alt="Logo">
+    <a href="/" aria-label="Go to the home page">
+        <img class="site-logo" src="/static/eatforhealing_logo.png" alt="Eat for Healing logo">
+    </a>
 
     <nav id="nav-menu">
-        <a href="/" class="active">Home</a>
-        <a href="/about">About</a>
-        <a href="/foodfordiabetes">Food suitable for Diabetes</a>
-        <a href="/diabetescondition">Diabetes Condition</a>
-        <a href="/blog">Blog</a>
-        <a href="/events">Events</a>
-        <a href="/contact">Contact</a>
+        <a href="/" class="{{ 'active' if current_path == '/' else '' }}">Home</a>
+        <a href="/about" class="{{ 'active' if current_path == '/about' else '' }}">About</a>
+        <a href="/foodfordiabetes" class="{{ 'active' if current_path == '/foodfordiabetes' else '' }}">Food for
+            Diabetes</a>
+        <a href="/diabetescondition" class="{{ 'active' if current_path == '/diabetescondition' else '' }}">Diabetes</a>
+        <a href="/blog" class="{{ 'active' if current_path == '/blog' else '' }}">Blog</a>
+        <a href="/events" class="{{ 'active' if current_path == '/events' else '' }}">Events</a>
+        <a href="/contact" class="{{ 'active' if current_path == '/contact' else '' }}">Contact</a>
         {% if user_session %}
         <div class="nav-user">
             {% if user_session.picture %}

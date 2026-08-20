@@ -83,7 +83,7 @@
         </div>
     </section>
     <div class="container">
-        <div id="results"></div>
+        <div id="results" tabindex="-1" aria-live="polite" aria-label="Search results"></div>
         <div class="loading" style="display:none;">
             Searching...
         </div>
@@ -117,6 +117,9 @@
 
                 const html = await response.text();
                 results.innerHTML = html;
+
+                results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                results.focus({ preventScroll: true });
 
                 if (loading) {
                     loading.style.display = 'none';

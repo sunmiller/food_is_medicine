@@ -45,44 +45,120 @@
 <body>
 
     {% include "header.html" %}
-    <section class="hero">
-        <div class="hero-content">
-            <h1>About Our Food Search Platform</h1>
+
+    <main class="about-showcase">
+        <div class="about-showcase-inner">
+            <div class="about-copy">
+                <div class="brand-lockup" aria-label="Eat for Healing brand">
+                    <a href="/" aria-label="Go to the home page">
+                        <img class="site-logo" src="/static/eatforhealing_logo.png" alt="Eat for Healing logo">
+                    </a>
+                </div>
+
+                <p class="brand-tagline">Protecting Health Through Nature</p>
+
+                <h2>Hi, I am Suriyaa</h2>
+                <p class="about-subtitle">HIGH SCHOOL RESEARCHER<br>DIABETES &amp; ENVIRONMENTAL HEALTH</p>
+
+                <p class="about-intro">
+                    I am a high school student from Michigan with a passion for understanding how food, health and the
+                    environment are connected. My goal is to use science to help people make informed, healthier
+                    choices.
+                </p>
+
+            </div>
+
+            <div class="about-portrait" aria-label="Portrait of Suriyaa">
+                <img src="/static/suriyaa.jpeg" alt="Suriyaa Sabaribala" />
+            </div>
         </div>
-    </section>
+
+        <div class="mission-banner">
+            <span class="quote-mark">“</span>
+            <p>My mission is to empower people with knowledge so they can live healthier lives in harmony with nature.
+            </p>
+            <span class="banner-leaf" aria-hidden="true">✿</span>
+        </div>
+    </main>
 
     <div class="container">
         <div class="content">
-            <h2>Food and the impact on Diabetes and Hypertension</h2>
-            <div class="intro-section">
-                <div class="intro-text">
-                    <p>
-                        Hi, my name is Suriyaa. I am a high school student in Michigan.
-                        I am interested in forensics, microbiology, environmental science, insects, genetics, and public
-                        health.
-                        My cause area is Forensic Environmental Biology. This means I study how clues from nature can
-                        help us understand health and environmental problems.
-                        I want to use science and service to protect both people and the planet.
+            <section class="why-built-section">
+                <h2>Why I Built Eat for Healing</h2>
 
-                    </p>
-                </div>
-                <div class="intro-image">
-                    <img src="/static/suriyaa.jpeg" alt="Suriyaa Sabaribala" class="profile-image">
-                </div>
-            </div>
+                <p>
+                    Diabetes affects millions of people, yet many are never taught how different foods influence their
+                    blood sugar. I created <strong>Eat for Healing</strong> to make that information easier to
+                    understand and accessible to everyone.
+                </p>
+
+                <p>
+                    My interest began with a simple question: <strong>How does the food we eat affect diabetes?</strong>
+                    Since then, I have spent countless hours studying nutrition, glycemic index, glycemic load,
+                    carbohydrates, fiber, and the science behind how foods impact blood glucose. I research medical
+                    literature, analyze nutrition data, and continually expand my knowledge to better understand the
+                    connection between diet and metabolic health.
+                </p>
+
+                <p>
+                    This website is the result of that ongoing learning. It helps people explore foods based on their
+                    nutritional characteristics so they can make more informed decisions. While no single food can cure
+                    diabetes, informed food choices - combined with guidance from healthcare professionals - can play an
+                    important role in managing blood sugar and supporting long-term health.
+                </p>
+
+                <p>
+                    My mission is simple: <strong>to transform complex nutrition science into practical,
+                        easy-to-understand information that empowers people to make healthier food choices every
+                        day.</strong>
+                </p>
+            </section>
 
             <section class="mission-section">
-                <h3>My Mission</h3>
-                <p>My mission is to show people that the environment affects our health.</p>
-                <p>Clean soil, clean water, native plants, and healthy insects all matter.</p>
-                <p>Through volunteering, research, and awareness, I want to help create cleaner and safer communities.
+                <p class="mission-kicker">My Mission</p>
+                <h2>Learning from nature and caring for the world around us.</h2>
+
+                <p>
+                    My mission is to learn more about the connection between nature, the environment, and our health,
+                    and to help others learn along the way.
+                </p>
+
+                <p>
+                    I enjoy being outdoors, learning about animals and insects, exploring nature, and helping clean
+                    parks and other outdoor spaces. The more time I spend learning about nature, the more I realize how
+                    connected everything is. Clean water, healthy soil, plants, animals, and insects all play an
+                    important role in the world around us.
+                </p>
+
+                <p>
+                    I want to learn more about how pollution, litter, waste, and habitat loss affect our environment
+                    and the communities we live in. I also want to encourage people to appreciate nature and
+                    understand that small things - like recycling, picking up litter, protecting plants, or simply
+                    spending time outside - can make a difference.
+                </p>
+
+                <p>
+                    I don't have all the answers, and I'm still learning. Through volunteering, research, and
+                    exploring the natural world, I hope to keep learning and share what I discover with others.
+                </p>
+
+                <p class="mission-closing">
+                    My goal is simple: to better understand nature, take care of the places around me, and encourage
+                    others to do the same.
                 </p>
             </section>
 
             <section class="research-section">
-                <h3>My Research</h3>
-                <p>I wrote a research paper about chronic inflammation and neurodegeneration, under Dr.Jobin Varkey,
-                    Assistant Professor of University of Southern California.</p>
+                <p class="research-kicker">My Research</p>
+                <h2>Exploring chronic inflammation and neurodegeneration.</h2>
+                <p>
+                    I wrote a research paper about chronic inflammation and neurodegeneration under the guidance of
+                    Dr. Jobin Varkey, Assistant Professor at the University of Southern California.
+                </p>
+                <a class="research-paper-link" href="/static/research-paper.pdf" target="_blank"
+                    rel="noopener noreferrer">
+                    Read my research paper <span aria-hidden="true">&#8594;</span>
+                </a>
             </section>
 
             <section class="activities-section">
@@ -108,72 +184,25 @@
                 <h3>Diabetes Research</h3>
 
                 <p>My father and grandmother were diagnosed with Diabetes. My dad continued to eat fried banana chips
-                    since
-                    he was under the impression that fried food did not affect diabetes. Since fried banana chips did
-                    not
-                    have carbohydrates.</p>
+                    since he was under the impression that fried food did not affect diabetes. Since fried banana chips
+                    did not have carbohydrates.</p>
 
                 <p>I researched on the internet and told him that this was not right and fried banana chips were not
-                    good
-                    for diabetes. He asked me to prove it. This started my journey into food and the impact of food
-                    intake
-                    on diabetes and hypertension.</p>
+                    good for diabetes. He asked me to prove it. This started my journey into food and the impact of food
+                    intake on diabetes and hypertension.</p>
 
                 <p>I started to create a journal with the names of the foods and their glycemic index so that my grandma
-                    and
-                    dad could easily refer to it. I started with simple fruits vegetables and grains. Later I expanded
-                    to
-                    prepared food like whole wheat bread and cake and other varieties. My dad then said that he wanted
-                    this
-                    in an excel spreadsheet. I made an excel spreadsheet with the food items and
-                    and the glycemic index and other nutritional values. </p>
+                    and dad could easily refer to it. I started with simple fruits, vegetables and grains. Later I
+                    expanded to prepared food like whole wheat bread and cake and other varieties.</p>
 
                 <p>I wanted to create a website that others can easily look up foods that they eat on a regular basis.
-                    My
-                    website should be able to make a recommendation based on the glycemic index and other nutritional
-                    values
-                    of the food and other dishes. This will allow the user to figure out if the food is good for them
-                    and
-                    their condition.</p>
+                    My website should be able to make a recommendation based on the glycemic index and other nutritional
+                    values of the food and other dishes. This will allow the user to figure out if the food is good for
+                    them and their condition.</p>
 
                 <p>Most of the nutritional values comes from the University of Sydney, the USDA and other sources on the
                     internet.</p>
             </section>
-
-            <section class="why-built-section">
-                <h2>Why I Built Eat for Healing</h2>
-
-                <p>
-                    Diabetes affects millions of people, yet many are never taught how different foods influence their
-                    blood sugar. I created <strong>Eat for Healing</strong> to make that information easier to
-                    understand
-                    and accessible to everyone.
-                </p>
-
-                <p>
-                    My interest began with a simple question: <strong>How does the food we eat affect diabetes?</strong>
-                    Since then, I have spent countless hours studying nutrition, glycemic index, glycemic load,
-                    carbohydrates, fiber, and the science behind how foods impact blood glucose. I research medical
-                    literature, analyze nutrition data, and continually expand my knowledge to better understand the
-                    connection between diet and metabolic health.
-                </p>
-
-                <p>
-                    This website is the result of that ongoing learning. It helps people explore foods based on their
-                    nutritional characteristics so they can make more informed decisions. While no single food can cure
-                    diabetes, informed food choices - combined with guidance from healthcare professionals - can play an
-                    important role in managing blood sugar and supporting long-term health.
-                </p>
-
-                <p>
-                    My mission is simple: <strong>to transform complex nutrition science into practical,
-                        easy-to-understand information that empowers people to make healthier food choices every
-                        day.</strong>
-                </p>
-            </section>
-
-
-
         </div>
 
         <section class="disclaimer">

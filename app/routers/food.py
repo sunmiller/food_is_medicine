@@ -37,6 +37,7 @@ if google_client_id and google_client_secret:
 def render_page(request: Request, name: str, context: dict | None = None):
     merged_context = {
         "user_session": request.session.get("user") if request.session else None,
+        "current_path": request.url.path,
     }
     if context:
         merged_context.update(context)
