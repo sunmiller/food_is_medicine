@@ -529,6 +529,54 @@ nav a.active {
     padding-left: 18px;
 }
 
+.blog-full-article {
+    max-width: 760px;
+    margin: 40px auto 0;
+    padding: 36px 40px;
+    background: #ffffff;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(15, 34, 58, 0.06);
+}
+
+.blog-full-article+.blog-full-article {
+    margin-top: 28px;
+}
+
+.blog-full-article .blog-meta {
+    margin-bottom: 6px;
+}
+
+.blog-full-article h2 {
+    margin: 0 0 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5ecf5;
+    font-size: 30px;
+    line-height: 1.25;
+    color: #1f3853;
+}
+
+.blog-full-article h3 {
+    margin: 28px 0 10px;
+    font-size: 20px;
+    color: #1f5130;
+}
+
+.blog-full-article p {
+    margin: 0 0 16px;
+    color: #33475b;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.blog-full-article p:last-child {
+    margin-bottom: 0;
+}
+
+.blog-full-article strong {
+    color: #1f3853;
+}
+
 /* Events page */
 .events-hero {
     padding: 72px 20px;
@@ -724,6 +772,25 @@ nav a.active {
 
 .contact-form button:hover {
     background: #005ec4;
+}
+
+.contact-status {
+    margin: 0 0 16px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.contact-status-success {
+    background: #eaf7ee;
+    color: #1f5130;
+    border: 1px solid #cdeaD6;
+}
+
+.contact-status-error {
+    background: #fdecec;
+    color: #7a2222;
+    border: 1px solid #f3caca;
 }
 
 /* Login page */
@@ -1021,6 +1088,14 @@ nav a.active {
 
     .blog-post-card h3 {
         font-size: 20px;
+    }
+
+    .blog-full-article {
+        padding: 24px 20px;
+    }
+
+    .blog-full-article h2 {
+        font-size: 24px;
     }
 
     .events-hero {

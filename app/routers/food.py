@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from app.chain import run_food_query
 from app.data import df
+from app.services.email_service import send_contact_email, EmailNotConfiguredError
 
 router = APIRouter()
 
@@ -127,6 +128,27 @@ def contact(request: Request):
         request=request,
         name="contact.html",
         context={}
+    )
+
+@router.post("/contact", response_class=HTMLResponse)
+async def contact_submit(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    message: str = Form("")
+):
+    try:
+        await send_contact_email(name=name, email=email, message=message)
+        status = "sent"
+    except EmailNotConfiguredError:
+        status = "not_configured"
+    except Exception:
+        status = "error"
+
+    return render_page(
+        request=request,
+        name="contact.html",
+        context={"contact_status": status}
     )
 
 @router.get("/login", response_class=HTMLResponse)

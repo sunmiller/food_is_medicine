@@ -78,8 +78,16 @@
             <h2 id="email-form-title">Contact Form</h2>
             <p>Share your details and message, and I will get back to you.</p>
 
-            <form class="contact-form" action="#" method="post"
-                onsubmit="event.preventDefault(); this.reset(); window.location.hash='contact-card';">
+            {% if contact_status == "sent" %}
+            <p class="contact-status contact-status-success">Thanks! Your message has been sent.</p>
+            {% elif contact_status == "not_configured" %}
+            <p class="contact-status contact-status-error">Email is not configured yet. Please try again later.</p>
+            {% elif contact_status == "error" %}
+            <p class="contact-status contact-status-error">Something went wrong sending your message. Please try again.
+            </p>
+            {% endif %}
+
+            <form class="contact-form" action="/contact" method="post">
                 <label for="contact-name">Your Name</label>
                 <input id="contact-name" name="name" type="text" placeholder="Enter your name" required>
 
