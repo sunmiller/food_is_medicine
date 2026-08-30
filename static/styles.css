@@ -1200,11 +1200,16 @@ nav a.active {
         display: flex;
     }
 
-    nav a {
+    nav a,
+    .subnavbtn {
         padding: 15px 24px;
         border-bottom: 1px solid rgba(24, 46, 40, 0.08);
         color: #1f4038;
         background: transparent;
+        width: 100%;
+        text-align: left;
+        border-radius: 0;
+        float: none;
     }
 
     nav a:last-child {
@@ -1410,6 +1415,59 @@ nav a.active {
     height: auto;
     object-fit: contain;
     filter: saturate(0.9) contrast(1.05);
+    border-radius: 28px;
+    box-shadow: 0 24px 48px rgba(18, 35, 29, 0.18);
+}
+
+.portrait-lower {
+    margin: 30px 0;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 30px;
+    align-items: center;
+    background: linear-gradient(145deg, #f7faf6, #edf5ef);
+    border: 1px solid #d3e7d8;
+    border-radius: 18px;
+}
+
+.portrait-lower-copy {
+    color: #31564a;
+}
+
+.portrait-kicker {
+    margin: 0 0 8px;
+    color: #2f6d52;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.portrait-lower-copy h3 {
+    margin: 0 0 16px;
+    font-size: clamp(1.9rem, 2.6vw, 2.8rem);
+    line-height: 1.2;
+    color: #1f3a34;
+}
+
+.portrait-lower-copy p {
+    margin: 0 0 14px;
+    line-height: 1.75;
+    color: #40615a;
+}
+
+.portrait-lower-image {
+    display: flex;
+    justify-content: center;
+}
+
+.portrait-lower-image img {
+    width: min(100%, 420px);
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 18px 40px rgba(18, 35, 29, 0.12);
+    object-fit: cover;
 }
 
 .mission-banner {
@@ -1556,6 +1614,11 @@ nav a.active {
 
     .about-portrait {
         min-height: 0;
+    }
+
+    .portrait-lower {
+        grid-template-columns: 1fr;
+        padding: 24px 20px;
     }
 }
 
