@@ -4,7 +4,7 @@ from langchain_core.output_parsers.string import StrOutputParser
 from dotenv import load_dotenv
 import os
 
-from app.data import df
+from app.data import get_df
 from app.security import safe_eval_pandas
 import pandas as pd
 import logging
@@ -36,6 +36,8 @@ You are given a pandas DataFrame named df with the following schema:
 10  Magnesium Content            int64
 11  Calcium Content              int64
 12  Fiber Content                float64
+13  ServingSize                    int64
+14  GlycemicLoad                float64
 
 Your task is to generate a valid pandas filtering query based on the user's natural language question.
 
@@ -62,6 +64,23 @@ Decision logic (follow strictly in this order):
    - Filter where "Suitable for Blood Pressure" == 1.
 
 4. If no valid filters apply, return df.iloc[0:0].
+
+Examples:
+
+User Query: Can I eat potato chips if I have diabetes
+Pandas Query: df[df["Food Name"].str.contains("potato chips", case=False, na=False)]
+
+User Query: Can I eat potato chips if I have hypertension
+Pandas Query: df[df["Food Name"].str.contains("potato chips", case=False, na=False)]
+
+User Query: Is banana good for high blood pressure
+Pandas Query: df[df["Food Name"].str.contains("banana", case=False, na=False)]
+
+User Query: What foods are suitable for hypertension
+Pandas Query: df[df["Suitable for Blood Pressure"] == 1]
+
+User Query: What foods are suitable for diabetes
+Pandas Query: df[df["Suitable for Diabetes"] == 1]
 
 
 User Query: {user_query}
@@ -105,7 +124,7 @@ def run_food_query(user_query: str):
     logger.info(f"Executing query: {pandas_query}")
 
     # USE THE SECURITY FUNCTION!
-    result = safe_eval_pandas(pandas_query, df)
+    result = safe_eval_pandas(pandas_query, get_df())
     logger.debug(f"Result type: {type(result)}")
 
      # Normalize result type
@@ -124,6 +143,9 @@ def run_food_query(user_query: str):
 
     if result_df.empty:
         return {"message": "No results found, try to rephrase your query."}
+
+    # NaN/NaT (e.g. blank sheet cells) aren't valid JSON; convert to null
+    result_df = result_df.astype(object).where(result_df.notna(), None)
 
     return {
         "query": pandas_query,

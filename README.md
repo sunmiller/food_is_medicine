@@ -51,6 +51,9 @@ A FastAPI-based intelligent food search system that allows users to query nutrit
    Create a `.env` file in the project root:
    ```env
    OPENAI_API_KEY=your_openai_api_key_here
+   # Optional: load food data from a published Google Sheet instead of pred_food.csv
+   GOOGLE_SHEET_CSV_URL=your_published_csv_url_here
+   GOOGLE_SHEET_CACHE_TTL=300
    ```
 
 ## Usage
@@ -142,6 +145,8 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ### Environment Variables
 
 - `OPENAI_API_KEY`: Required for AI functionality
+- `GOOGLE_SHEET_CSV_URL`: Optional. Publish your Google Sheet to the web as CSV (File > Share > Publish to web > CSV) and paste the link here to load food data from the sheet instead of `app/pred_food.csv`. If unset, or if the sheet can't be reached, the app falls back to the local CSV.
+- `GOOGLE_SHEET_CACHE_TTL`: Optional. Seconds to cache the sheet data before re-fetching (default `300`). Lets you edit the sheet and see changes without redeploying.
 
 ### Security Notes
 

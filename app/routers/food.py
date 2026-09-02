@@ -9,7 +9,7 @@ from authlib.integrations.starlette_client import OAuth, OAuthError
 from pydantic import BaseModel
 
 from app.chain import run_food_query
-from app.data import df
+from app.data import get_df
 from app.services.email_service import send_contact_email, EmailNotConfiguredError
 
 router = APIRouter()
@@ -258,9 +258,9 @@ def health():
 def check_dataframe():
     try:
         return {
-            "shape": df.shape,
-            "columns": df.columns.tolist(),
-            "sample_count": min(2, len(df))
+            "shape": get_df().shape,
+            "columns": get_df().columns.tolist(),
+            "sample_count": min(2, len(get_df()))
         }
     except Exception:
         return {"error": "Dataframe not available"}
