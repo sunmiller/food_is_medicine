@@ -82,6 +82,8 @@
             <p class="contact-status contact-status-success">Thanks! Your message has been sent.</p>
             {% elif contact_status == "not_configured" %}
             <p class="contact-status contact-status-error">Email is not configured yet. Please try again later.</p>
+            {% elif contact_status == "recaptcha_failed" %}
+            <p class="contact-status contact-status-error">Please confirm you are not a robot and try again.</p>
             {% elif contact_status == "error" %}
             <p class="contact-status contact-status-error">Something went wrong sending your message. Please try again.
             </p>
@@ -97,12 +99,20 @@
                 <label for="contact-message">Message</label>
                 <textarea id="contact-message" name="message" rows="5" placeholder="Write your message"></textarea>
 
+                {% if recaptcha_site_key %}
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                {% endif %}
+
                 <button type="submit">Send Message</button>
             </form>
         </dialog>
     </section>
 
     {% include "footer.html" %}
+
+    {% if recaptcha_site_key %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    {% endif %}
 
 </body>
 

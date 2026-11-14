@@ -11,8 +11,11 @@ from pydantic import BaseModel
 from app.chain import run_food_query
 from app.data import get_df
 from app.services.email_service import send_contact_email, EmailNotConfiguredError
+from app.services.recaptcha_service import verify_recaptcha, RECAPTCHA_SECRET_KEY
 
 router = APIRouter()
+
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SITEMAP_PATH = PROJECT_ROOT / "sitemap.xml"
@@ -74,7 +77,7 @@ def sitemap():
 def robots():
     return FileResponse(str(ROBOTS_PATH), media_type="text/plain")
 
-@router.get("/", response_class=HTMLResponse)
+@router.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def home(request: Request):
     return render_page(
         request=request,
@@ -127,7 +130,7 @@ def contact(request: Request):
     return render_page(
         request=request,
         name="contact.html",
-        context={}
+        context={"recaptcha_site_key": RECAPTCHA_SITE_KEY}
     )
 
 @router.post("/contact", response_class=HTMLResponse)
@@ -135,9 +138,19 @@ async def contact_submit(
     request: Request,
     name: str = Form(...),
     email: str = Form(...),
-    message: str = Form("")
+    message: str = Form(""),
+    g_recaptcha_response: str = Form("", alias="g-recaptcha-response"),
 ):
     try:
+        if RECAPTCHA_SECRET_KEY:
+            remote_ip = request.client.host if request.client else None
+            if not await verify_recaptcha(g_recaptcha_response, remote_ip=remote_ip):
+                return render_page(
+                    request=request,
+                    name="contact.html",
+                    context={"contact_status": "recaptcha_failed", "recaptcha_site_key": RECAPTCHA_SITE_KEY}
+                )
+
         await send_contact_email(name=name, email=email, message=message)
         status = "sent"
     except EmailNotConfiguredError:
@@ -148,7 +161,7 @@ async def contact_submit(
     return render_page(
         request=request,
         name="contact.html",
-        context={"contact_status": status}
+        context={"contact_status": status, "recaptcha_site_key": RECAPTCHA_SITE_KEY}
     )
 
 @router.get("/login", response_class=HTMLResponse)

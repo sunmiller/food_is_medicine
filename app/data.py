@@ -17,18 +17,44 @@ CACHE_TTL_SECONDS = int(os.getenv("GOOGLE_SHEET_CACHE_TTL", "300"))
 
 _LOCAL_CSV_PATH = Path(__file__).parent / "pred_food.csv"
 
+# Columns that must be numeric; stray text in the Google Sheet source can make
+# pandas infer these as strings (object dtype), which breaks arithmetic in templates.
+_NUMERIC_COLUMNS = [
+    "Glycemic Index",
+    "Calories",
+    "Carbohydrates",
+    "Protein",
+    "Fat",
+    "Suitable for Diabetes",
+    "Suitable for Blood Pressure",
+    "Sodium Content",
+    "Potassium Content",
+    "Magnesium Content",
+    "Calcium Content",
+    "Fiber Content",
+    "ServingSize",
+    "GlycemicLoad",
+]
+
 _cached_df = None
 _cached_at = 0.0
 
 
+def _coerce_numeric_columns(df):
+    for column in _NUMERIC_COLUMNS:
+        if column in df.columns:
+            df[column] = pd.to_numeric(df[column], errors="coerce")
+    return df
+
+
 def _load_from_local():
-    return pd.read_csv(_LOCAL_CSV_PATH)
+    return _coerce_numeric_columns(pd.read_csv(_LOCAL_CSV_PATH))
 
 
 def _load_from_sheet():
     response = requests.get(GOOGLE_SHEET_CSV_URL, timeout=10)
     response.raise_for_status()
-    return pd.read_csv(StringIO(response.text))
+    return _coerce_numeric_columns(pd.read_csv(StringIO(response.text)))
 
 
 def _refresh():
