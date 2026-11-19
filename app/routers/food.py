@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from pydantic import BaseModel
 
@@ -12,6 +13,8 @@ from app.chain import run_food_query
 from app.data import get_df
 from app.services.email_service import send_contact_email, EmailNotConfiguredError
 from app.services.recaptcha_service import verify_recaptcha, RECAPTCHA_SECRET_KEY
+from app.services.query_service import query_service
+from app.services.user_service import save_google_user
 
 router = APIRouter()
 
@@ -205,6 +208,13 @@ async def auth_google_callback(request: Request):
             "name": user_info.get("name"),
             "picture": user_info.get("picture"),
         }
+        await run_in_threadpool(
+            save_google_user,
+            user_info.get("sub"),
+            user_info.get("email"),
+            user_info.get("name"),
+            user_info.get("picture"),
+        )
         return RedirectResponse(url="/", status_code=302)
     except OAuthError:
         return RedirectResponse(url="/login?error=google_auth_failed", status_code=302)
@@ -237,6 +247,15 @@ async def search_food_form(
     request: Request,
     query: str = Form(...)
 ):
+    if query.strip():
+        user = request.session.get("user")
+        await run_in_threadpool(
+            query_service.save_search,
+            query,
+            user.get("name") if user else None,
+            user.get("email") if user else None,
+            not bool(user),
+        )
     data = run_food_query(query)
 
     return render_page(

@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Boolean, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import BigInteger, Boolean, Integer, String, Text, DateTime, ForeignKey, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
@@ -11,6 +11,9 @@ class User(Base):
     
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     email: Mapped[Optional[str]] = mapped_column(Text, unique=True, nullable=True)
+    google_sub: Mapped[Optional[str]] = mapped_column(Text, unique=True, nullable=True)
+    name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    picture: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     is_anonymous: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     
@@ -32,3 +35,16 @@ class QueryHistory(Base):
     
     # Relationship
     user: Mapped["User"] = relationship("User", back_populates="queries")
+
+
+class FoodSearchHistory(Base):
+    __tablename__ = "food_search_history"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    user_query: Mapped[str] = mapped_column(Text, nullable=False)
+    username: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    email: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    is_anonymous: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    searched_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )

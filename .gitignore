@@ -1,3 +1,9 @@
 .env
+__pycache__/
+app/__pycache__
+
+*.py[cod]
+*$py.class
+
 Makefile
 commands.txt

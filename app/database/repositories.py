@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc, func
+from sqlalchemy.dialects.postgresql import insert
 from app.database.models import User, QueryHistory
 from typing import Optional, List
 import logging
@@ -9,6 +10,26 @@ logger = logging.getLogger(__name__)
 class UserRepository:
     def __init__(self, session: Session):
         self.session = session
+
+    def save_google_user(
+        self, google_sub: str, email: Optional[str], name: Optional[str], picture: Optional[str]
+    ) -> None:
+        statement = insert(User).values(
+            google_sub=google_sub,
+            email=email,
+            name=name,
+            picture=picture,
+            is_anonymous=False,
+        )
+        self.session.execute(statement.on_conflict_do_update(
+            index_elements=[User.google_sub],
+            set_={
+                "email": statement.excluded.email,
+                "name": statement.excluded.name,
+                "picture": statement.excluded.picture,
+                "is_anonymous": False,
+            },
+        ))
     
     def create_anonymous_user(self) -> User:
         """Create a new anonymous user"""

@@ -1,32 +1,30 @@
-from app.database.models import QueryHistory
-from typing import Optional, List
+import logging
+from typing import Optional
+
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.database.models import FoodSearchHistory
+
+logger = logging.getLogger(__name__)
+
 
 class QueryPersistenceService:
-    def __init__(self):
-        self.db_enabled = False
-    
-    def save_query_and_results(
-        self,
-        user_id: int,
-        user_query: str,
-        pandas_query: str,
-        execution_time_ms: int,
-        result_count: int,
-        status: str,
-        error_message: str = None
-    ) -> Optional[int]:
-        """Database disabled: keep method signature but do not persist."""
-        _ = (user_id, user_query, pandas_query, execution_time_ms, result_count, status, error_message)
-        return None
-    
-    def get_or_create_anonymous_user(self) -> Optional[int]:
-        """Database disabled: no user record is created."""
-        return None
-    
-    def get_user_query_history(self, user_id: int, limit: int = 50) -> List[QueryHistory]:
-        """Database disabled: return an empty history."""
-        _ = (user_id, limit)
-        return []
+    def save_search(
+        self, user_query: str, username: Optional[str], email: Optional[str], is_anonymous: bool
+    ) -> None:
+        logger.info("Saving food search")
+        try:
+            from app.database.connection import db_manager
 
-# Global instance
+            with db_manager.get_session() as session:
+                session.add(FoodSearchHistory(
+                    user_query=user_query,
+                    username=username,
+                    email=email,
+                    is_anonymous=is_anonymous,
+                ))
+        except (SQLAlchemyError, ValueError) as exc:
+            logger.error("Could not save food search (%s)", type(exc).__name__)
+
+
 query_service = QueryPersistenceService()

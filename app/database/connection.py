@@ -14,19 +14,13 @@ class DatabaseManager:
     def __init__(self):
         self.database_url = os.getenv("DATABASE_URL")
         if not self.database_url:
-            print("❌ DATABASE_URL environment variable is not set!")
-            print("Current environment variables:")
-            for key in os.environ:
-                if 'DATABASE' in key.upper():
-                    print(f"  {key}: {os.environ[key]}")
             raise ValueError("DATABASE_URL environment variable is required. Make sure load_dotenv() is called before importing this module.")
-        
-        print(f"✅ Database URL loaded: {self.database_url[:30]}...")  # Only show first 30 chars for security
         
         self.engine = create_engine(
             self.database_url,
             pool_size=10,
             max_overflow=20,
+            hide_parameters=True,
             echo=os.getenv("DB_ECHO", "false").lower() == "true"
         )
         
@@ -48,9 +42,8 @@ class DatabaseManager:
         try:
             yield session
             session.commit()
-        except Exception as e:
+        except Exception:
             session.rollback()
-            logger.error(f"Database session error: {e}")
             raise
         finally:
             session.close()
